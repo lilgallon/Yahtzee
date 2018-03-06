@@ -1,0 +1,22 @@
+
+table{
+    margin : 0 auto;
+    border : 2px solid black;
+    border-collapse : collapse;
+    display: inline-block;
+}
+
+table td{
+    height: 20px;
+    border : 1px solid black;
+}
+
+#inferior-title td{
+    text-align: right;
+    padding-right: 5px;
+}
+
+#superior-title td{
+    text-align: right;
+    padding-right: 5px;
+}
