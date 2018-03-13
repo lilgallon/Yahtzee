@@ -1,121 +1,198 @@
+var $;
+
+/**
+ * It is formatted this way :
+ * i = 1 -> number of dice 1
+ * i = 2 -> number of dice 2
+ * and so on
+ */
+var dices;
+
 /**
  * Called when the document is ready, it is a sort of main
  */
 $(document).ready(function($) {
-    initDiceTable();
-    initResultTable();
+    dices = [];
+    resetDicesArray();
+
+    $("#information").text("Cliquez dans la case d'en dessous pour lancer un dé.")
+
+    /**
+     * Called when the user wants to re-roll a dice
+     */
+    /*
+    $("#dice-launch").on("click", "img", function(){
+        if(countLaunchedDices() < 5) {
+
+            // Launch the dice (random)
+            var rand_dice = rollADice();
+
+            // Add the dice to the array
+            dices[rand_dice] += 1;
+
+            // Put the image according to the dice
+            var image = '<img style="width: 50px; margin: 5px;" src="images/dice' + rand_dice + '.png"/>';
+            $(this).append(image);
+
+            // Update the dices results
+            updateDicesResults();
+            updateComboResults();
+        }
+    });
+
+    $("#dice-launch").on("click", function(){
+
+        if(countLaunchedDices() !== 5) {
+            for (var i = 1; i <= 5; ++i) {
+                // Launch the dice (random)
+                var rand_dice = rollADice();
+
+                // Add the dice to the array
+                dices[rand_dice] += 1;
+
+                // Put the image according to the dice
+                var image = '<img style="width: 50px; margin: 5px;" src="images/dice' + rand_dice + '.png"/>';
+                $(this).append(image);
+            }
+
+            // Update the dices results
+            updateDicesResults();
+            updateComboResults();
+        }
+
+    });*/
+
+    dices[2] = 1;
+    dices[3] = 1;
+    dices[4] = 1;
+    dices[5] = 1;
+    var image = '<img style="width: 50px; margin: 5px;" src="images/dice' + 2 + '.png"/>';
+    $("#dice-launch").append(image);
+    $("#dice-launch").append(image);
+    $("#dice-launch").append(image);
+    $("#dice-launch").append(image);
+    updateDicesResults();
+    updateComboResults();
+
 });
 
-/**
- * Creates the dice table
- */
-function initDiceTable(){
-
-    var d = window.document;
-    var table = d.createElement("table");
-
-    for(var i = 0; i < 7; ++i){
-        var tr = d.createElement("tr");
-        table.appendChild(tr);
-        for(var j = 0; j < 2; ++j) {
-            var td = d.createElement("td");
-            if(j === 0 && i !== 0){
-                td.innerHTML = "Dé " + (i);
-            }else if(j === 1 && i === 0){
-                td.innerHTML = "Points";
-            }
-
-            tr.appendChild(td);
-        }
-    }
-
-    table.id = "dice-table";
-    d.getElementById("game").appendChild(table);
+function rollADice(){
+    return 1 + Math.floor(Math.random() * 6);
 }
 
-/**
- * Creates the result table
- */
-function initResultTable(){
+function countLaunchedDices(){
+    var cpt = 0;
+    for(var i = 1 ; i < dices.length ; ++ i)
+        cpt += dices[i];
+    return cpt;
+}
 
-    var d = window.document;
-    var table = d.createElement("table");
+function updateDicesResults(){
+    for(var i = 1 ; i < dices.length ; ++ i){
+        var score = dices[i] * i;
 
-    for(var i = 0; i < 7; ++i){
-        var tr = d.createElement("tr");
-        table.appendChild(tr);
-        for(var j = 0; j < 3; ++j) {
-            var td = d.createElement("td");
+        if(dices[i] !== 0)
+            $("#dice" + i).text(score.toString());
+        else
+            $("#dice" + i).text("-");
+    }
+}
 
-            if(j === 0 ){
-                switch (i){
-                    case 0:
-                        td.innerHTML = "Combinaison";
-                        break;
-                    case 1:
-                        td.innerHTML = "Brelan";
-                        break;
-                    case 2:
-                        td.innerHTML = "Petite suite";
-                        break;
-                    case 3:
-                        td.innerHTML = "Grande suite";
-                        break;
-                    case 4:
-                        td.innerHTML = "Full";
-                        break;
-                    case 5:
-                        td.innerHTML = "Carré";
-                        break;
-                    case 6:
-                        td.innerHTML = "Yahtzee";
-                        break;
-                    case 7:
-                        td.innerHTML = "Chance";
-                        break;
-                    default:
-                        td.innerHTML = "wtf";
-                        break;
-                }
+function updateComboResults(){
 
-            }else if(j === 1 ){
-                switch (i) {
-                    case 0:
-                        td.innerHTML = "Points";
-                        break;
-                    case 1:
-                        td.innerHTML = "Somme";
-                        break;
-                    case 2:
-                        td.innerHTML = "30";
-                        break;
-                    case 3:
-                        td.innerHTML = "40";
-                        break;
-                    case 4:
-                        td.innerHTML = "25";
-                        break;
-                    case 5:
-                        td.innerHTML = "Somme";
-                        break;
-                    case 6:
-                        td.innerHTML = "50";
-                        break;
-                    case 7:
-                        td.innerHTML = "Somme";
-                        break;
-                    default:
-                        td.innerHTML = "wtf";
-                        break;
-                }
-            }else if(j === 2){
-                if(i === 0) td.innerHTML = "Points"
-            }
+    var brelan = getBrelanScore();
+    var carre = getCarreScore();
+    var full = getFullScore();
+    var yahtzee = getYahtzeeScore();
+    var petite_suite = getStraightScore(4);
+    var grande_suite = getStraightScore(5);
 
-            tr.appendChild(td);
+    $("#brelan").text(brelan.toString());
+    $("#carre").text(carre.toString());
+    $("#full").text(full.toString());
+    $("#yahtzee").text(yahtzee.toString());
+
+    $("#petite-suite").text(petite_suite.toString());
+    $("#grande-suite").text(grande_suite.toString());
+
+    if(brelan === 0 && carre === 0 && full === 0 && yahtzee === 0 && petite_suite === 0 && grande_suite === 0)
+        $("#chance").text(getChanceScore());
+    else
+        $("#chance").text("0");
+}
+
+function numberOfSameDices(except, number){
+    var dice = -1;
+    for (var i = 1; i < dices.length; ++i) {
+        if (dices[i] === number && i !== except)
+            dice = i;
+    }
+    return dice;
+}
+
+function getBrelanScore(){
+    var dice = numberOfSameDices(-1, 3);
+    if(dice === -1) return 0;
+    return dices[dice] * dice;
+}
+
+function getCarreScore(){
+    var dice = numberOfSameDices(-1, 4);
+    if(dice === -1) return 0;
+    return dices[dice] * dice;
+}
+
+function getFullScore(){
+    var dice1 = numberOfSameDices(-1, 3);
+    if(dice1 === -1) return 0;
+
+    // Now we know that we have at least 3 dices with of the same number
+    // we will check if there are 2 dices of the same color
+    var dice2 = numberOfSameDices(dice1, 2);
+    if(dice2 === -1) return 0;
+
+    return 25;
+}
+
+function getYahtzeeScore(){
+    var dice = numberOfSameDices(-1, 5);
+    if(dice === -1) return 0;
+    return 50;
+}
+
+
+function getStraightScore(aimed_straight_lenght){
+
+    var index = 1;
+    var max_straight_length = 0;
+    var straight_length = 0;
+
+    for(var index = 1 ; index < dices.length ; ++ index){
+        // There is an element, so we start the straight otherwise we reset it
+        if(dices[index] !== 0){
+            straight_length ++;
+        }else{
+            straight_length = 0;
+        }
+
+        if(straight_length > max_straight_length){
+            max_straight_length = straight_length;
         }
     }
+    console.log(max_straight_length);
+    if(max_straight_length !== aimed_straight_lenght) return 0;
+    return 40;
+}
 
-    table.id = "result-table";
-    d.getElementById("game").appendChild(table);
+function resetDicesArray(){
+    for(var i = 0 ; i <= 6 ; ++ i)
+        dices.push(0);
+}
+
+function getChanceScore(){
+    var score = 0;
+    for(var i = 1 ; i < dices.length ; ++ i){
+        score += dices[i] * i;
+    }
+    return score;
 }
