@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link href="style.css?12" rel="stylesheet" type="text/css">
-
+    <link href="style.css?17" rel="stylesheet" type="text/css">
     <script type="text/javascript" src="jquery-3.3.1.min.js"></script>
-    <script type="text/javascript" src="script.js?13"></script>
+    <script type="text/javascript" src="script.js?18"></script>
 
 </head>
 <body>
-    <h1>Yahtzee</h1>
+    <h1>Yahtzee - Lilian Gallon S4Bgit a</h1>
     <hr>
 
     <div id="dices">
@@ -20,6 +19,11 @@
             </tr>
             <tr>
                 <td id="dice-launch"></td>
+            </tr>
+            <tr>
+                <td id="interaction-box">
+                    <input type="submit" name="" id="start-stop" value="Démarrer la partie">
+                </td>
             </tr>
         </table>
     </div>
@@ -54,12 +58,20 @@
                 <td>Dé 6</td>
                 <td id="diceres6"></td>
             </tr>
+            <tr>
+                <td>Total</td>
+                <td id="total"></td>
+            </tr>
+            <tr>
+                <td>Score précedent</td>
+                <td id="score-total"></td>
+            </tr>
         </table>
 
         <table>
             <tr>
-                <td>Points</td>
                 <td>Combinaison</td>
+                <td>Points</td>
             </tr>
             <tr>
                 <td>Brelan</td>
@@ -88,6 +100,14 @@
             <tr>
                 <td>Chance</td>
                 <td id="chance"></td>
+            </tr>
+        </table>
+    </div>
+
+    <div id="history">
+        <table>
+            <tr>
+                <td>Historique de jeu</td>
             </tr>
         </table>
     </div>
