@@ -20,14 +20,16 @@ $(document).ready(function($) {
     /**
      * Called when the user wants to re-roll a dice
      */
-    /*
-    $("#dice-launch").on("click", "img", function(){
-        if(countLaunchedDices() < 5) {
+
+    // TODO: DICE INDEX
+    for(var dice_index = 1 ; dice_index < dices.length ; dice_index ++) {
+        $("#dice" + dice_index).on("click", function () {
 
             // Launch the dice (random)
             var rand_dice = rollADice();
 
             // Add the dice to the array
+
             dices[rand_dice] += 1;
 
             // Put the image according to the dice
@@ -37,8 +39,9 @@ $(document).ready(function($) {
             // Update the dices results
             updateDicesResults();
             updateComboResults();
-        }
-    });
+
+        });
+    }
 
     $("#dice-launch").on("click", function(){
 
@@ -51,7 +54,7 @@ $(document).ready(function($) {
                 dices[rand_dice] += 1;
 
                 // Put the image according to the dice
-                var image = '<img style="width: 50px; margin: 5px;" src="images/dice' + rand_dice + '.png"/>';
+                var image = '<img id="dice' + rand_dice +'" style="width: 50px; margin: 5px;" src="images/dice' + rand_dice + '.png"/>';
                 $(this).append(image);
             }
 
@@ -60,19 +63,7 @@ $(document).ready(function($) {
             updateComboResults();
         }
 
-    });*/
-
-    dices[2] = 1;
-    dices[3] = 1;
-    dices[4] = 1;
-    dices[5] = 1;
-    var image = '<img style="width: 50px; margin: 5px;" src="images/dice' + 2 + '.png"/>';
-    $("#dice-launch").append(image);
-    $("#dice-launch").append(image);
-    $("#dice-launch").append(image);
-    $("#dice-launch").append(image);
-    updateDicesResults();
-    updateComboResults();
+    });
 
 });
 
@@ -92,9 +83,9 @@ function updateDicesResults(){
         var score = dices[i] * i;
 
         if(dices[i] !== 0)
-            $("#dice" + i).text(score.toString());
+            $("#diceres" + i).text(score.toString());
         else
-            $("#dice" + i).text("-");
+            $("#diceres" + i).text("-");
     }
 }
 
