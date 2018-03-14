@@ -3,111 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link href="style.css?17" rel="stylesheet" type="text/css">
+    <link href="style.css?1" rel="stylesheet" type="text/css">
     <script type="text/javascript" src="jquery-3.3.1.min.js"></script>
-    <script type="text/javascript" src="script.js?18"></script>
+    <script type="text/javascript" src="gamescript.js"></script>
 
 </head>
 <body>
-    <h1>Yahtzee - Lilian Gallon S4Bgit a</h1>
-    <hr>
+    <header>
+        <h1>Yahtzee - Lilian Gallon S4B</h1>
+    </header>
 
-    <div id="dices">
+    <!-- Here goes everything which is related to the dices -->
+    <div id="panel">
         <table>
             <tr>
-                <td id="information"></td>
+                <td class="last-line">Dés lancés :</td>
             </tr>
             <tr>
-                <td id="dice-launch"></td>
+                <td id="rolled-dices"></td>
             </tr>
             <tr>
-                <td id="interaction-box">
-                    <input type="submit" name="" id="start-stop" value="Démarrer la partie">
-                </td>
+                <td class="last-line">Dés gardés :</td>
+            </tr>
+            <tr>
+                <td id="selected-dices"></td>
             </tr>
         </table>
+        <br>
+        <input id="roll" type="submit" value="Lancer les dés">
     </div>
 
-    <div id="game">
-        <table>
-            <tr>
-                <td>Dés</td>
-                <td>Points</td>
-            </tr>
-            <tr>
-                <td>Dé 1</td>
-                <td id="diceres1"></td>
-            </tr>
-            <tr>
-                <td>Dé 2</td>
-                <td id="diceres2"></td>
-            </tr>
-            <tr>
-                <td>Dé 3</td>
-                <td id="diceres3"></td>
-            </tr>
-            <tr>
-                <td>Dé 4</td>
-                <td id="diceres4"></td>
-            </tr>
-            <tr>
-                <td>Dé 5</td>
-                <td id="diceres5"></td>
-            </tr>
-            <tr>
-                <td>Dé 6</td>
-                <td id="diceres6"></td>
-            </tr>
-            <tr>
-                <td>Total</td>
-                <td id="total"></td>
-            </tr>
-            <tr>
-                <td>Score précedent</td>
-                <td id="score-total"></td>
-            </tr>
-        </table>
-
+    <div id="result">
         <table>
             <tr>
                 <td>Combinaison</td>
-                <td>Points</td>
+                <td>Score</td>
             </tr>
+            <tr>
+                <td>Dé 1</td>
+                <td id="dice-result-1"></td>
+            </tr>
+            <tr>
+                <td>Dé 2</td>
+                <td id="dice-result-2"></td>
+            </tr>
+            <tr>
+                <td>Dé 3</td>
+                <td id="dice-result-3"></td>
+            </tr>
+            <tr>
+                <td>Dé 4</td>
+                <td id="dice-result-4"></td>
+            </tr>
+            <tr>
+                <td>Dé 5</td>
+                <td id="dice-result-5"></td>
+            </tr>
+            <tr class="last-line">
+                <td>Dé 6</td>
+                <td id="dice-result-6"></td>
+            </tr>
+
+
+            <tr>
+                <td><b>Somme</b></td>
+                <td id="sum-result"></td>
+            </tr>
+            <tr class="last-line">
+                <td><b>Bonus</b></td>
+                <td id="bonus-result"></td>
+            </tr>
+
             <tr>
                 <td>Brelan</td>
-                <td id="brelan"></td>
-            </tr>
-            <tr>
-                <td>Petite suite</td>
-                <td id="petite-suite"></td>
-            </tr>
-            <tr>
-                <td>Grande suite</td>
-                <td id="grande-suite"></td>
-            </tr>
-            <tr>
-                <td>Full</td>
-                <td id="full"></td>
+                <td id="tree-of-a-kind-result"></td>
             </tr>
             <tr>
                 <td>Carré</td>
-                <td id="carre"></td>
+                <td id="four-of-a-kind-result"></td>
             </tr>
             <tr>
-                <td>Yahtzee</td>
-                <td id="yahtzee"></td>
+                <td>Full</td>
+                <td id="full-house-result"></td>
+            </tr>
+            <tr>
+                <td>Petite suite</td>
+                <td id="small-straight-result"></td>
+            </tr>
+            <tr>
+                <td>Grande suite</td>
+                <td id="large-straight-result"></td>
             </tr>
             <tr>
                 <td>Chance</td>
-                <td id="chance"></td>
+                <td id="chance-result"></td>
             </tr>
-        </table>
-    </div>
+            <tr class="last-line">
+                <td>Yahtzee</td>
+                <td id="yahtzee-result"></td>
+            </tr>
 
-    <div id="history">
-        <table>
             <tr>
-                <td>Historique de jeu</td>
+                <td><b>Total score</b></td>
+                <td id="total-result"></td>
             </tr>
         </table>
     </div>

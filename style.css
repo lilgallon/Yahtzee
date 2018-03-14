@@ -1,35 +1,97 @@
-table{
+body{
+    margin: 0;
+    height: 0;
+    text-align: center;
+}
+
+/* HEADER */
+header{
+    box-shadow: 0 2px 8px #000000;
+    text-align: center;
+}
+
+header h1{
+    margin: 0;
+    color: #5b5b5b;
+    padding: 20px;
+}
+
+/* PANEL */
+
+#panel{
+    margin-top: 50px;
+    text-align: center;
+    display: inline-block;
+}
+
+#panel table{
     margin : 10px;
     border : 2px solid black;
     border-collapse : collapse;
     display: inline-block;
 }
 
-table td{
-    width : 100px;
+#panel table td{
+    /*height : 25px;*/
+    border : 1px solid black;
+    text-align: center;
+    width: 400px;
+}
+
+#panel img{
+    width: 65px;
+    margin: 5px;
+}
+
+#rolled-dices{
+    height: 200px;
+}
+
+#selected-dices{
+    height: 200px;
+}
+
+input[type="submit"]
+{
+    display: block;
+    padding: 19px 39px 19px 39px;
+    color: #FFFFFF;
+    background: #1abc9c;
+    font-size: 18px;
+    text-align: center;
+    font-style: normal;
+    width: 100%;
+    border: 1px solid #16a085;
+    margin-bottom: 10px;
+}
+
+input[type="submit"]:hover
+{
+    background: #109177;
+}
+
+/* RESULTS */
+
+#result{
+    text-align: center;
+    display: inline-block;
+}
+
+#result table{
+    margin-left : 10px;
+    border : 2px solid black;
+    border-collapse : collapse;
+    display: inline-block;
+}
+
+#result table td{
     height : 25px;
     border : 1px solid black;
     text-align: center;
+    width: 40px;
+    padding: 2px;
 }
 
-#dices td{
-    width: 400px;
-    font-size: medium;
-}
-
-#dice-launch{
-    height: 70px;
-    font-size: 20px;
-}
-
-body{
-    text-align: center;
-}
-
-input{
-    text-align: center;
-}
-
-#history table td{
-    width: 400px;
+.last-line{
+    border-bottom: 2px solid black;
 }
