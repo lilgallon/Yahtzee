@@ -6,7 +6,7 @@ table{
 }
 
 table td{
-    width : 50px;
+    width : 100px;
     height : 25px;
     border : 1px solid black;
     text-align: center;
@@ -24,4 +24,12 @@ table td{
 
 body{
     text-align: center;
+}
+
+input{
+    text-align: center;
+}
+
+#history table td{
+    width: 400px;
 }

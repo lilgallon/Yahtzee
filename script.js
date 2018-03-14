@@ -1,5 +1,3 @@
-var $;
-
 /**
  * It is formatted this way :
  * i = 1 -> number of dice 1
@@ -7,6 +5,10 @@ var $;
  * and so on
  */
 var dices;
+var reroll_number;
+var yahtzee_counter;
+var game_number;
+var total_score;
 
 /**
  * Called when the document is ready, it is a sort of main
@@ -14,38 +16,63 @@ var dices;
 $(document).ready(function($) {
     dices = [];
     resetDicesArray();
+    reroll_number = 5;
+    yahtzee_counter = 0;
+    game_number = 0;
+    total_score = 0;
 
-    $("#information").text("Cliquez dans la case d'en dessous pour lancer un dé.")
+    $("#information").text("Démarrez la partie dès que vous êtes prêts.")
 
     /**
      * Called when the user wants to re-roll a dice
      */
+    $("#dice-launch").on("click", "span", function () {
 
-    // TODO: DICE INDEX
-    for(var dice_index = 1 ; dice_index < dices.length ; dice_index ++) {
-        $("#dice" + dice_index).on("click", function () {
+        if(reroll_number !== 0) {
+            var dice_index = parseInt($(this).attr('id').split("e")[1]);
 
             // Launch the dice (random)
             var rand_dice = rollADice();
 
-            // Add the dice to the array
-
+            // Add the new dice to the array
             dices[rand_dice] += 1;
 
-            // Put the image according to the dice
-            var image = '<img style="width: 50px; margin: 5px;" src="images/dice' + rand_dice + '.png"/>';
-            $(this).append(image);
+            // Remove the dice that was re-rolled
+            var alt = parseInt($("#dice" + dice_index).find("img").attr("alt"));
+            dices[alt] -= 1;
+
+            // Remove the image of the re-rolled dice
+            $("#dice" + dice_index).empty();
+
+            // Put the new image according to the new dice
+            var image = '<img alt="' + rand_dice + '" style="width: 50px; margin: 5px;" src="images/dice' + rand_dice + '.png"/>';
+            $("#dice" + dice_index).append(image);
 
             // Update the dices results
             updateDicesResults();
             updateComboResults();
 
-        });
-    }
+            reroll_number --;
+            if(reroll_number === 0){
+                $("#information").text("Vous avez relancé autant de fois que possible, cliquez sur \"finir le tour\" pour finir votre tour.");
+            }else{
+                $("#information").text("Vous pouvez encore relancer certains dés en cliquant dessus. (" + reroll_number +" restants)");
+            }
 
-    $("#dice-launch").on("click", function(){
+        }
+    });
 
-        if(countLaunchedDices() !== 5) {
+
+    /**
+     * Rolls the 5 dices, and put it in an image container where :
+     * - id is the number of the dice (#1, #2, ... #5)
+     * - alt is the value of the dice (1, 2 , ... 6)
+     */
+    $("#start-stop").click(function(){
+
+        if(game_number < 2) {
+
+            $("#dice-launch").empty();
             for (var i = 1; i <= 5; ++i) {
                 // Launch the dice (random)
                 var rand_dice = rollADice();
@@ -54,39 +81,90 @@ $(document).ready(function($) {
                 dices[rand_dice] += 1;
 
                 // Put the image according to the dice
-                var image = '<img id="dice' + rand_dice +'" style="width: 50px; margin: 5px;" src="images/dice' + rand_dice + '.png"/>';
-                $(this).append(image);
+                var image = '<span id="dice' + i +'" ><img  alt="' + rand_dice + '" style="width: 50px; margin: 5px;" src="images/dice' + rand_dice + '.png"/></span>';
+                $("#dice-launch").append(image);
             }
 
-            // Update the dices results
+            game_number ++;
+            if(game_number === 1){
+                if($("#yahtzee").text() !== "0")
+                    yahtzee_counter ++;
+                $(this).attr("value", "Finir le tour");
+            }else {
+                total_score += getScore();
+                $(this).attr("value", "Finir la partie");
+            }
+
+            $("#information").text("Vous pouvez désormais relancer certains dés en cliquant dessus. (" + reroll_number +" restants)");
+
+            $("#score-total").text(total_score.toString());
+            // Update the results displayed
             updateDicesResults();
             updateComboResults();
+        }else if(game_number === 2){
+            if($("#yahtzee").text() !== "0")
+                yahtzee_counter ++;
+
+            total_score += getScore();
+            // Last turn finished
+            $("#history").find("table").append("<tr><td>" + "Date : " + (new Date()).toLocaleTimeString() + ", score : " + total_score.toString() + "</td></tr>");
+
+            // Reset
+            dices = [];
+            resetDicesArray();
+            reroll_number = 5;
+            total_score = 0;
+            yahtzee_counter = 0;
+            game_number = 0;
+
+            $("#brelan").text("0");
+            $("#carre").text("0");
+            $("#full").text("0");
+            $("#yahtzee").text("0");
+            $("#petite-suite").text("0");
+            $("#grande-suite").text("0");
+            $("#chance").text("0");
+            $("#total").text("0");
+            for(var i = 1 ; i < dices.length ; ++ i){
+                $("#diceres" + i).text("0");
+            }
+
+            $("#dice-launch").empty();
+            $(this).attr("value", "Démarrer la partie");
+            $("#information").text("Démarrez la partie dès que vous êtes prêts.")
         }
-
     });
-
 });
 
 function rollADice(){
     return 1 + Math.floor(Math.random() * 6);
 }
 
-function countLaunchedDices(){
-    var cpt = 0;
-    for(var i = 1 ; i < dices.length ; ++ i)
-        cpt += dices[i];
-    return cpt;
-}
-
 function updateDicesResults(){
+    var total = 0;
     for(var i = 1 ; i < dices.length ; ++ i){
         var score = dices[i] * i;
+        total += score
 
         if(dices[i] !== 0)
             $("#diceres" + i).text(score.toString());
         else
-            $("#diceres" + i).text("-");
+            $("#diceres" + i).text("0");
     }
+    $("#total").text(total);
+}
+
+function getScore(){
+    var bonus = parseInt($("#total")) > 63 ? 35 : 0;
+    bonus += yahtzee_counter === 2 ? 100 : 0;
+    if($("#full").text() !== "0") return parseInt($("#full").text()) + bonus;
+    if($("#brelan").text() !== "0") return parseInt($("#brelan").text()) + bonus;
+    if($("#carre").text() !== "0") return parseInt($("#carre").text()) + bonus;
+    if($("#yahtzee").text() !== "0") return parseInt($("#yahtzee").text()) + bonus;
+    if($("#petite-suite").text() !== "0") return parseInt($("#petite-suite").text()) + bonus;
+    if($("#grande-suite").text() !== "0") return parseInt($("#grande-suite").text()) + bonus;
+    if($("#chance").text() !== "0") return parseInt($("#chance").text()) + bonus;
+    return -1;
 }
 
 function updateComboResults(){
@@ -98,7 +176,11 @@ function updateComboResults(){
     var petite_suite = getStraightScore(4);
     var grande_suite = getStraightScore(5);
 
-    $("#brelan").text(brelan.toString());
+    if(full === 0)
+        $("#brelan").text(brelan.toString());
+    else
+        $("#brelan").text("0");
+
     $("#carre").text(carre.toString());
     $("#full").text(full.toString());
     $("#yahtzee").text(yahtzee.toString());
@@ -152,7 +234,7 @@ function getYahtzeeScore(){
 }
 
 
-function getStraightScore(aimed_straight_lenght){
+function getStraightScore(aimed_straight_length){
 
     var index = 1;
     var max_straight_length = 0;
@@ -170,8 +252,7 @@ function getStraightScore(aimed_straight_lenght){
             max_straight_length = straight_length;
         }
     }
-    console.log(max_straight_length);
-    if(max_straight_length !== aimed_straight_lenght) return 0;
+    if(max_straight_length !== aimed_straight_length) return 0;
     return 40;
 }
 
