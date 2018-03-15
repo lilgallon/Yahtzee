@@ -44,11 +44,11 @@ header h1{
 }
 
 #rolled-dices{
-    height: 200px;
+    height: 140px;
 }
 
 #selected-dices{
-    height: 200px;
+    height: 140px;
 }
 
 input[type="submit"]
@@ -68,6 +68,10 @@ input[type="submit"]
 input[type="submit"]:hover
 {
     background: #109177;
+}
+
+#information{
+    height: 100px;
 }
 
 /* RESULTS */
