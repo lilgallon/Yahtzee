@@ -8,11 +8,12 @@ body{
 header{
     box-shadow: 0 2px 8px #000000;
     text-align: center;
+    background-color: #1abc9c;
 }
 
 header h1{
     margin: 0;
-    color: #5b5b5b;
+    color: #FFFFFF;
     padding: 20px;
 }
 
@@ -98,4 +99,22 @@ input[type="submit"]:hover
 
 .last-line{
     border-bottom: 2px solid black;
+}
+
+/* HISTORY */
+
+#history{
+    margin-top: 80px;
+}
+
+#history div{
+    padding: 5px;
+    background-color: #1abc9c;
+    color: #FFFFFF;
+    box-shadow: 0 2px 8px #000000;
+}
+
+#history ul{
+    margin-top: 15px;
+    font-size: 15px;
 }

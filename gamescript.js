@@ -37,6 +37,22 @@ var number_of_throws;
 var INITIAL_NUMBER_OF_THROWS = 3;
 
 /**
+ * It contains all the selected scores
+ * 0 -> dice 1
+ * ....
+ * 5 -> dice 6
+ * 6 -> 3 of a kind
+ * ....
+ * 12 -> Yahtzee
+ */
+var final_scores;
+
+/**
+ * Game status indicator
+ */
+var game_finished;
+
+/**
  * Called when the document is ready, it is a sort of main
  */
 $(document).ready(function() {
@@ -49,8 +65,15 @@ $(document).ready(function() {
  * Used to init the game
  */
 function init(){
+    var i;
     updateInformation("Cliquez sur lancer les dés pour démarrer la partie.");
     number_of_throws = INITIAL_NUMBER_OF_THROWS;
+
+    game_finished = false;
+
+    final_scores = [];
+    for(i = 0 ; i < 13 ; ++ i)
+        final_scores.push(0);
 
     resetDices();
 
@@ -70,7 +93,13 @@ function init(){
     available_result_ids.push("#yahtzee-result");
     locked_result_ids = [];
 
-    for(var i = 0 ; i < available_result_ids.length ; ++ i){
+    for(i = 0 ; i < available_result_ids ; ++ i)
+        $(available_result_ids[i]).text("");
+    $("#sum-result").text("");
+    $("#bonus-result").text("");
+    $("#total-result").text("");
+
+    for(i = 0 ; i < available_result_ids.length ; ++ i){
         // Add the hover interaction
         $(available_result_ids[i]).hover(function () {
             $(this).css("background-color", "#1abc9c");
@@ -90,7 +119,10 @@ function init(){
 
     $("#roll").click(function () {
 
-        if(number_of_throws !== 0 && !(countDices(rolled_dices) === 0 && number_of_throws !== INITIAL_NUMBER_OF_THROWS)) {
+        if(game_finished){
+            init();
+            showDices();
+        }else if(number_of_throws !== 0 && !(countDices(rolled_dices) === 0 && number_of_throws !== INITIAL_NUMBER_OF_THROWS)) {
             number_of_throws--;
             onRollClick();
             if(number_of_throws !== 0) {
@@ -262,7 +294,9 @@ function onScoreClick(sender){
         // We need to handle the fact that if the player made a second yahtzee we need to put 100 extra score
         if (!available && id === "#yahtzee-result" && getYahtzeeScore(getAllDices()) !== 0) {
             // HERE THE USER MADE A SECOND YAHTZEE
-            // TODO
+            // Last yahtzee = 50 points, new yahtzee = 50 points, bonus of 2 yahtzee = 100 => 200 points total
+            $(id).text("200");
+            final_scores[12] = 200;
         }
 
         if (available) {
@@ -279,8 +313,25 @@ function onScoreClick(sender){
 
             // We remove it from the available list
             available_result_ids.splice(index, 1);
-            // and add it to the locked list
+            // add it to the locked list
             locked_result_ids.push(id);
+            // and add its score to the score container
+            switch (id){
+                case "#dice-result-1": final_scores[0] = parseInt(sender.text()); break;
+                case "#dice-result-2": final_scores[1] = parseInt(sender.text()); break;
+                case "#dice-result-3": final_scores[2] = parseInt(sender.text()); break;
+                case "#dice-result-4": final_scores[3] = parseInt(sender.text()); break;
+                case "#dice-result-5": final_scores[4] = parseInt(sender.text()); break;
+                case "#dice-result-6": final_scores[5] = parseInt(sender.text()); break;
+                case "#tree-of-a-kind-result": final_scores[6] = parseInt(sender.text()); break;
+                case "#four-of-a-kind-result": final_scores[7] = parseInt(sender.text()); break;
+                case "#full-house-result": final_scores[8] = parseInt(sender.text()); break;
+                case "#small-straight-result": final_scores[9] = parseInt(sender.text()); break;
+                case "#large-straight-result": final_scores[10] = parseInt(sender.text()); break;
+                case "#chance-result": final_scores[11] = parseInt(sender.text()); break;
+                case "#yahtzee-result": final_scores[12] = parseInt(sender.text()); break;
+                default: break;
+            }
 
             // Now we change its style
             $(id).unbind('mouseenter mouseleave'); // it is actually hover
@@ -296,15 +347,41 @@ function onScoreClick(sender){
             showDices();
             updateResults();
             updateInformation("Vous pouvez lancer les dés quand vous voulez.");
-        } else {
-            // If there aren't remaining boxes, stop the game
-            // TODO: calculate final score
-            // -> SUM
-            // -> BONUS IF SUM > ???
-            // -> TOTAL SCORE
-            // Add total score in the history
+        } else if(!game_finished){
+            game_finished = true;
+            resetDices();
+            showDices();
+            updateInformation("Partie finie, vous pouvez recommencer une partie en appuyant sur \"lancer les dés\".");
+            var total = calculateFinalScore();
+            $("#history").find("ul").append("Date : " + (new Date()).toLocaleTimeString() + ", score : " + total.toString());
         }
     }
+}
+
+/**
+ * It calculates all the final scores (sum, bonus and total score)
+ * @return the total
+ */
+function calculateFinalScore(){
+    var i;
+    // Sum calculation
+    var sum = 0;
+    var bonus = 0;
+    for(i = 0 ; i < 6 ; ++ i)
+        sum += final_scores[i];
+    if(sum >= 63)
+        bonus = 35;
+    // Display
+    $("#sum-result").text(sum.toString());
+    $("#bonus-result").text(bonus.toString());
+
+    // Final score calculation
+    var total = sum + bonus;
+    for(i = 6 ; i < final_scores.length ; ++i )
+        total += final_scores[i];
+    // Display
+    $("#total-result").text(total.toString());
+    return total;
 }
 
 /**
@@ -313,6 +390,14 @@ function onScoreClick(sender){
  */
 function updateInformation(info){
     $("#information").empty();
+    $("#information").append(info);
+}
+
+/**
+ * It adds information at the end of the current information
+ * @param info information message
+ */
+function addInformation(info){
     $("#information").append(info);
 }
 
@@ -378,17 +463,19 @@ function updateResults(){
                 $(id).text(score.toString());
                 break;
             case "#yahtzee-result":
-                // TODO: Handle the second yahtzee which gives 100 extra points
                 score = getYahtzeeScore(all_dices);
                 $(id).text(score.toString());
                 break;
             default:
+                if(getYahtzeeScore(all_dices) !== 0)
+                    addInformation("Vous avez fait un second Yahtzee ! Cliquez sur Yahtzee pour avoir le bonus.");
                 break;
         }
     }
 }
 
 function getAllDices(){
+    var i;
     // We put all the dice in the same array
     var all_dices = [];
     // Init
