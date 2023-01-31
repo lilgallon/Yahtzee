@@ -1,11 +1,4 @@
-# Yahtzee
-![Latest release](https://img.shields.io/github/release/N3ROO/Yahtzee.svg)
-![opissues](https://img.shields.io/github/issues/N3ROO/Yahtzee.svg) 
-![clissues](https://img.shields.io/github/issues-closed/N3ROO/Yahtzee.svg)
-
-An original Yahtzee, but a joker is given by doing a yahtzee. Made for the Web programming (client side course at the Bordeaux Institude of Technology (grade: 19/20).
-
-![preview](.github/screenshot.png)
+SWOSU ft. Lil Gallon
 
 ## 1. Getting started
 ### 1.1 Prerequisites
